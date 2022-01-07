@@ -1,0 +1,214 @@
+### meta
+
+`<meta>`标签：位于文档head标签里，不包含任何内容，但他的作用却很大。
+
+**meta有两个属性：**
+
+* **name属性**
+
+  格式：`<meta name="参数" content="具体的参数值"/>`
+
+  ```
+  name的参数有：
+  	1、keywords(关键字)，用于告诉搜索引擎你的网站有这些关键字
+  	<meta name='keywords' content='name, age'/>
+  	
+  	2、description(描述)，用于告诉搜索引擎你的网站的主要内容
+  	<meta name='description' content='my name is lily and my age is two'/>
+  	
+  	3、robots(机器人向导)，用于告诉机器人哪些页面需要索引，哪些不需要。content的参数有all,none,index,noindex,follow,nofollow。默认是all。
+  	<meta name='robot' content='none'/>
+  	
+  	4、author(作者),说明网页的作者
+  	
+  	5、viewport,网页屏幕自适应手机屏幕,width:css像素,device-width:独立像素
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  ```
+
+* **http-equiv属性**
+
+  格式：`<meta http-equiv="参数" content="参数变量值"> `
+
+  ```
+  http-equiv的参数有：
+  	1、expires(期限),用于设定网页的到期时间,必须使用GMT的时间格式.
+  	<meta http-equiv='expires' content='Fri,12 Jan 2001 18:18:18 GMT'/>
+  	
+  	2、pragma(cache模式),禁止浏览器从本地计算机的缓存中访问页面内容
+  	<meta http-equiv='Pragma' content='no-cache'/>
+  	
+  	3、refresh(刷新),自动刷新并转到新页面
+  	<meta http-equiv='refresh' content='2;url=xxx'/>
+  	
+  	4、seet-cookie,如果网页过期，那么存盘的cookie将被删除
+  	
+  	......
+  ```
+
+
+
+
+
+### script脚本中的defer和 async
+
+起因：HTML在执行的时候，遇到外部的js引用，需要`下载执行`js文件，此时会停止页面的渲染，导致页面表现为空白(白屏)。defer和async是不会造成阻塞的两种方案，但二者也有不同。
+
+defer特性告诉浏览器不用等待脚本，浏览器继续处理html(脚本会被下载,等到DOM构建完成才会执行），具有defer特性的脚本会严格按照顺序去执行。
+
+async特性告诉浏览器不用管脚本，自己执行自己的。具有async特性的脚本执行没有顺序，谁先加载完，就会去执行。
+
+
+
+### 说说语义化，h5中的语义化标签
+
+用正确的标签做正确的事。在html中语义化，可以清晰分明的体现出代码的结构，有利于团队的开发和维护，搜索引擎优化，以有意义的方式来渲染网页。
+
+h5中的语义化标签有：header、nav、article、section、aside、footer
+
+
+
+### a 标签默认事件禁掉之后做了什么才实现了跳转
+
+阻止a标签跳转方式：
+
+```js
+<a href="javascript:void(0)">百度一下</a>
+<a href='javascript:;'>百度一下</a>
+<a href='#'>百度一下</a>
+//
+<a href="https://www.baidu.com">hh</a>
+const a = document.querySelector('a')
+  a.addEventListener('click', function (e) {
+    e.preventDefault() //阻止默认事件
+    //location.href = a.href
+  })
+
+//实现跳转，利用BOM的location属性
+location.href = a.href
+```
+
+
+
+### 网站SEO处理
+
+1、合理的title、description、keywords
+
+2、语义化html标签
+
+3、图片加alt属性说明
+
+4、少用iframe，抓取不到
+
+5、页面扁平，深层次不利于爬取
+
+6、减少http请求，提高网站的加载速度
+
+
+
+### html 标签 b 和 strong 的区别
+
+二者的具体表现的效果一样，但仍有差别。b(bond)粗体，将字符设为粗体。strong表示强调，加强字符的语气。
+
+
+
+### 减少DOM数量的方法？大量的DOM该怎么优化
+
+减少dom数量的方法：
+
+1）伪元素     2）按需加载，减少不必要的元素  3）结构合理，语义化标签
+
+大量DOM的优化：
+
+1）用局部变量存储DOM的引用
+
+2）文档片段(document.createDocumentFragment),创建的是一个虚拟的节点对象。向这个节点添加dom节点，修改dom节点并不会影响到真实的dom结构。
+
+3）可以用`innerHTML`来代替高频繁的`appendChild`
+
+4）分页加载 每次加载一页大概十来个数据 再往下滑动就再去加载
+
+
+
+### DOM操作优化
+
+1）减少DOM访问次数
+
+2）局部变量存储dom引用
+
+3）使用更快的api(querySelector)
+
+4）减少重绘重排的词素
+
+5）事件委托，减少绑定事件处理器
+
+
+
+### 重绘和重排
+
+浏览器在显示页面的过程中，会生成一个DOM树、一个CSSOM树。这俩有会合并成渲染树，然后开始布局，绘制，显示页面。当DOM的几何元素(宽、高)改变了，浏览器就需要重新计算元素的几何属性，将受到影响的部分消失，重新构建渲染树，这个过程叫**重排**，完成重排后，要将新渲染树的渲染到屏幕上，这个叫**重绘**。
+
+重排一定会带来重绘，重绘不一定带来重排。如只改变一个元素的背景，就不会造成重排。
+
+重排的触发机制：
+
+1）添加或删除可见的DOM元素
+
+2）元素位置改变
+
+3）元素本省尺寸改变
+
+4）内容改变
+
+5）浏览器窗口大小改变
+
+
+
+**减小重排和重绘**
+
+1）改变样式尽量一次性修改
+
+2）批量修改DOM(添加10个DOM)步骤：①让该元素脱离文档流、②进行操作、③将元素带入文档中
+
+​	**脱离文档流的方法：**①隐藏元素、②使用文档片段创建一个子树，再拷贝到文档中、③将原始元素拷贝到脱离文档流的节点中，操作，再替换原始元素。
+
+
+
+### 事件委托
+
+通过父元素绑定子元素的时间，子元素的时间委托给父元素。
+
+使用场景：父元素中有十个子元素，想个这些子元素都绑定一个点击事件，这时只需要给父元素绑定就好了。要是父元素里又新增了子元素，那新增的子元素也会有这个事件。利用的原理就是事件冒泡机制。
+
+事件处理机制：捕获、处理、冒泡
+
+
+
+### html布局元素有哪些？每一种的应用场景
+
+1、内联元素
+
+span、i、em、a、strong、br、input、textarea，不可以直接操作宽高以及相关的css属性，期款高由自身的内容决定
+
+2、块级元素
+
+h1~h6、div、ul、ol、li、table、form
+
+独占一行，可以直接设置宽高以及相关css属性
+
+在不设置宽度的情况下，宽度等于父元素的宽度
+
+在不设置高度的情况下，高度等于内容的高度
+
+3、行内块级元素
+
+display：inline-block
+
+不自动换行，排序方式从左至右，可设置宽高度
+
+**应用场景**
+
+内联：用于不指定宽高，有内容撑起宽高，不占满一行
+
+块级：用于指定宽高，占满一行
+
+行内块：用于指定宽高、不占满一行
