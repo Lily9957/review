@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="d">防抖</button>
+  <button id="t">节流</button>
+  <button id="n">正常点击</button>
+  <script>
+    function debounce(fn, delay){
+      let timer = null
+      return function(){
+        //保存函数调用时的上下文和参数，传递给 fn
+        const context = this
+        const args = arguments
+
+        if(timer) clearTimeout(timer)
+
+        timer = setTimeout(function(){
+          fn.apply(context, args)
+          timer = null;
+        }, delay)
+      }
+    }
+
+    function throttle(fn, delay){
+      let timer = null
+      return function(){
+        if(timer) return
+
+        timer = setTimeout(()=> {
+          fn.apply(this, arguments)
+          timer = null;
+        }, delay)
+      }
+    }
+
+    const dom1 = document.querySelector("#d")
+    dom1.addEventListener('click', debounce(()=> {
+      console.log("debounce")
+    }, 500))
+    const dom2 = document.querySelector("#t")
+    dom2.addEventListener('click', throttle(()=> {
+      console.log("throttle")
+    }, 500))
+
+    const dom3 = document.querySelector("#n")
+    dom3.addEventListener('click', function(){
+      console.log("normal")
+    })
+  </script>
+</body>
+</html>
